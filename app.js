@@ -6,6 +6,8 @@ let eva = false;
 function init() {
     document.title = "JS Calculator";
     const container = document.createElement('div');
+    const dummy = document.createElement('br');
+    document.body.appendChild(dummy);
     container.classList.add('container');
     container.style.maxWidth = '600px';
     container.style.maxHeight = '700px';
