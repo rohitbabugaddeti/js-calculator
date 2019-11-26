@@ -2,6 +2,17 @@ const opts = ['*', '/', '+', '-', '9', '8', '7', '6', '5', '4', '3', '2', '1', '
 const spec = ['*', '/', '+', '-','=']; //special function keys
 let dec = false;
 let eva = false;
+//stack
+    var states_stack=[];
+    var states_stack_ptr=0;
+   const push_stack = (prev_state)  => {
+        states_stack[states_stack_ptr++]=prev_state;
+    }
+    const pop_stack = () => {
+        if (states_stack_ptr==0)
+            return false;
+        return states_stack[--states_stack_ptr];
+    }
 
 function init() {
     document.title = "JS Calculator";
@@ -15,6 +26,7 @@ function init() {
     document.body.appendChild(container);
     const output = document.createElement('input');
     output.setAttribute('type','text');
+    output.disabled=true;
     output.classList.add('output');
     output.style.width = '100%';
     output.style.lineHeight = '50px';
@@ -45,17 +57,29 @@ function init() {
         makeBtn(opt_val,addToOutput);
     });
     makeBtn('=',evaluate);
+    
+    
+    
         function clrOne(){
             let actual = output.value;
+            var last= actual[actual.length-1];
+            //console.log(last);
+            
             output.value=actual.slice(0,-1);
             //console.log(actual.slice(actual.length-1,actual.length));
-            if(!output.value.includes('.')){ //check if '.' exists in the output after clearing one.
+            if(last=="."){ //check if '.' exists in the output after clearing one.
                 dec=false;
+            }
+            if(spec.includes(last))
+            {
+                dec = pop_stack();
             }
         }
         function clrAll(){
             output.value = '';
             dec=false;
+            states_stack=[];
+            states_stack_ptr=0;
         }
     
         function evaluate(){
@@ -102,6 +126,8 @@ function init() {
             }
             eva = spec.includes(data);
             if(eva){ //enabling adding '.' if any spec key is pressed
+                push_stack(dec);
+                
                 dec=false;
                 //console.log(spec.includes(output.value.slice(output.value.length-1,output.value.length)));
                 last_val = output.value.slice(output.value.length-1,output.value.length);
