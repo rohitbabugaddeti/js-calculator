@@ -15,6 +15,7 @@ let eva = false;
     }
 
 function init() {
+
     document.title = "JS Calculator";
     const container = document.createElement('div');
     const dummy = document.createElement('br');
@@ -24,6 +25,7 @@ function init() {
     container.style.maxHeight = '700px';
     container.style.margin='auto';
     document.body.appendChild(container);
+
     const output = document.createElement('input');
     output.setAttribute('type','text');
     output.disabled=true;
@@ -86,9 +88,6 @@ function init() {
             if(output.value==='' || eva){
                 output.style.border = 'red 1px solid';
             }
-//            else if(eva){
-//                output.style.border = 'red 1px solid';
-//            }
             else{
                 output.style.border = '';
                 output.value = eval(output.value);
@@ -112,7 +111,13 @@ function init() {
     
         function addToOutput(obj){
             //console.log(obj.target); //obj.target gives the actual element on which the event listener was defined
-            let data = obj.target.val;
+            let data;
+            if(obj.target !== undefined){
+                data = obj.target.val;
+            }
+            else{
+                data = obj;
+            }
             //console.log(data);
             output.style.border = '';
             if(data == '.'){ //to make sure we add only one '.' in the output
@@ -142,7 +147,38 @@ function init() {
             }
             output.value += data;
     }
+
+    window.onload = function() {
+        document.getElementsByTagName('body')[0].onkeyup = function(event) { 
+            let code;
     
+            if (event.key !== undefined) {
+              code = event.key;
+            } else if (event.keyIdentifier !== undefined) {
+              code = event.keyIdentifier;
+            } else if (event.keyCode !== undefined) {
+              code = event.keyCode;
+            }
+            
+            if(code !== undefined){
+                if (opts.includes(code)) {
+                    addToOutput(code)
+                }
+                else if(code === "c" || code === "C") {
+                    clrAll()
+                }
+                else if(code === "Backspace" || code === "Delete") {
+                    clrOne()
+                }
+                else if (code === "=" || code === "Enter") {
+                    evaluate()
+                }
+            }
+        }
+     };
 }
 
+
 window.addEventListener("DOMContentLoaded", init);
+
+
