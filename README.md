@@ -1,6 +1,6 @@
 # js-calculator
 
-A calculator app made completely using JavaScript. 
+A calculator app built completely using JavaScript. 
 
 Tried this just to check my knowledge on DOM handling.
 
